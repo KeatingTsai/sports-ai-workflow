@@ -1,0 +1,95 @@
+{
+  "name": "体育数据日报 + 赔率异动监控",
+  "nodes": [
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            { "field": "cronExpression", "expression": "30 8 * * *" }
+          ]
+        }
+      },
+      "id": "node-cron",
+      "name": "每日 08:30 触发",
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1,
+      "position": [240, 300]
+    },
+    {
+      "parameters": {
+        "method": "GET",
+        "url": "https://api.your-sportsbook.internal/v1/odds/snapshots",
+        "sendQuery": true,
+        "queryParameters": {
+          "parameters": [
+            { "name": "date", "value": "={{ $today.format('yyyy-MM-dd') }}" }
+          ]
+        },
+        "options": { "timeout": 30000 }
+      },
+      "id": "node-fetch",
+      "name": "S1 拉赔率+投注快照",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [460, 300],
+      "notes": "真实环境接盘口商/自家交易后台 API;Demo 中由 fetch_odds.py 产出同结构 JSON"
+    },
+    {
+      "parameters": {
+        "language": "javaScript",
+        "jsCode": "// S2 赔率异动规则引擎(与 detect_anomaly.py 同逻辑,阈值可热改)\nconst TH = { steamDrop: 0.15, reverseGap: 0.10, conc: 0.80, bigHandle: 120000, lowCount: 200 };\nconst out = [];\nfor (const m of $input.first().json.matches) {\n  const flags = [];\n  const hd = (m.current.home - m.opening.home) / m.opening.home;\n  const ad = (m.current.away - m.opening.away) / m.opening.away;\n  const hp = m.handle_home_pct;\n  if (hd <= -TH.steamDrop || ad <= -TH.steamDrop) flags.push({ rule: 'R1_赔率急跌', severity: 'high' });\n  if (hp >= 0.65 && hd >= TH.reverseGap) flags.push({ rule: 'R2_反向线动', severity: 'high' });\n  if (Math.max(hp, 1 - hp) >= TH.conc) flags.push({ rule: 'R3_投注集中', severity: 'mid' });\n  if (m.handle_usdt >= TH.bigHandle) flags.push({ rule: 'R4_大额盘口', severity: 'mid' });\n  if (m.handle_usdt >= TH.bigHandle * 0.5 && m.bet_count < TH.lowCount) flags.push({ rule: 'R5_少笔大额', severity: 'high' });\n  if (flags.length) out.push({ match_id: m.match_id, sport: m.sport, match: m.home + ' vs ' + m.away, handle_usdt: m.handle_usdt, flags });\n}\nreturn [{ json: { date: $today.format('yyyy-MM-dd'), anomalies: out } }];"
+      },
+      "id": "node-detect",
+      "name": "S2 异动规则引擎",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.anthropic.com/v1/messages",
+        "sendHeaders": true,
+        "headerParameters": {
+          "parameters": [
+            { "name": "x-api-key", "value": "={{ $credentials.anthropicApi }}" },
+            { "name": "anthropic-version", "value": "2023-06-01" },
+            { "name": "content-type", "value": "application/json" }
+          ]
+        },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"model\": \"claude-sonnet-4-6\",\n  \"max_tokens\": 2000,\n  \"messages\": [\n    { \"role\": \"user\", \"content\": \"你是体育博彩运营分析师,按固定口径(无 emoji、结论先行、异动用疑似措辞)根据以下数据写每日日报。数据: {{ JSON.stringify($json) }}\" }\n  ]\n}",
+        "options": { "timeout": 60000 }
+      },
+      "id": "node-llm",
+      "name": "S3 Claude 生成日报",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [900, 300],
+      "notes": "需在 n8n 配置 anthropicApi 凭证。Demo 离线版由 generate_report.py 兜底"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://open.feishu.cn/open-apis/bot/v2/hook/YOUR_WEBHOOK_TOKEN",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\n  \"msg_type\": \"text\",\n  \"content\": { \"text\": {{ JSON.stringify($json.content[0].text) }} }\n}"
+      },
+      "id": "node-push",
+      "name": "S4 推送飞书群",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1120, 300]
+    }
+  ],
+  "connections": {
+    "每日 08:30 触发": { "main": [[{ "node": "S1 拉赔率+投注快照", "type": "main", "index": 0 }]] },
+    "S1 拉赔率+投注快照": { "main": [[{ "node": "S2 异动规则引擎", "type": "main", "index": 0 }]] },
+    "S2 异动规则引擎": { "main": [[{ "node": "S3 Claude 生成日报", "type": "main", "index": 0 }]] },
+    "S3 Claude 生成日报": { "main": [[{ "node": "S4 推送飞书群", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "meta": { "description": "体育数据日报与赔率异动监控:Cron 触发 -> 拉数据 -> 规则引擎命中异动 -> Claude 写日报 -> 推飞书。规则在前 LLM 在后,口径固定可交接。" }
+}

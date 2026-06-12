@@ -1,0 +1,445 @@
+{
+  "date": "2026-06-12",
+  "matches": [
+    {
+      "match_id": "M0001",
+      "sport": "足球",
+      "league": "英超",
+      "home": "Arsenal",
+      "away": "Chelsea",
+      "start_time": "2026-06-12 13:30",
+      "opening": {
+        "home": 2.34,
+        "draw": 3.94,
+        "away": 3.09
+      },
+      "current": {
+        "home": 2.44,
+        "draw": 3.83,
+        "away": 3.09
+      },
+      "handle_usdt": 65656.44,
+      "bet_count": 1373,
+      "handle_home_pct": 0.506,
+      "handle_away_pct": 0.494
+    },
+    {
+      "match_id": "M0002",
+      "sport": "足球",
+      "league": "英超",
+      "home": "Man City",
+      "away": "Liverpool",
+      "start_time": "2026-06-12 22:15",
+      "opening": {
+        "home": 3.39,
+        "draw": 3.08,
+        "away": 2.76
+      },
+      "current": {
+        "home": 3.48,
+        "draw": 2.97,
+        "away": 2.63
+      },
+      "handle_usdt": 63918.27,
+      "bet_count": 1841,
+      "handle_home_pct": 0.424,
+      "handle_away_pct": 0.576
+    },
+    {
+      "match_id": "M0003",
+      "sport": "足球",
+      "league": "西甲",
+      "home": "Real Madrid",
+      "away": "Sevilla",
+      "start_time": "2026-06-12 19:15",
+      "opening": {
+        "home": 3.33,
+        "draw": 3.67,
+        "away": 2.88
+      },
+      "current": {
+        "home": 3.66,
+        "draw": 3.57,
+        "away": 2.6
+      },
+      "handle_usdt": 86660.03,
+      "bet_count": 1881,
+      "handle_home_pct": 0.743,
+      "handle_away_pct": 0.257
+    },
+    {
+      "match_id": "M0004",
+      "sport": "足球",
+      "league": "意甲",
+      "home": "Inter",
+      "away": "Napoli",
+      "start_time": "2026-06-12 14:45",
+      "opening": {
+        "home": 3.14,
+        "draw": 3.75,
+        "away": 4.49
+      },
+      "current": {
+        "home": 3.07,
+        "draw": 3.75,
+        "away": 4.29
+      },
+      "handle_usdt": 5532.82,
+      "bet_count": 1572,
+      "handle_home_pct": 0.46,
+      "handle_away_pct": 0.54
+    },
+    {
+      "match_id": "M0005",
+      "sport": "足球",
+      "league": "德甲",
+      "home": "Bayern",
+      "away": "Dortmund",
+      "start_time": "2026-06-12 21:00",
+      "opening": {
+        "home": 1.55,
+        "draw": 4.19,
+        "away": 2.04
+      },
+      "current": {
+        "home": 1.76,
+        "draw": 4.04,
+        "away": 1.84
+      },
+      "handle_usdt": 89550.67,
+      "bet_count": 871,
+      "handle_home_pct": 0.762,
+      "handle_away_pct": 0.238
+    },
+    {
+      "match_id": "M0006",
+      "sport": "足球",
+      "league": "法甲",
+      "home": "PSG",
+      "away": "Monaco",
+      "start_time": "2026-06-12 23:30",
+      "opening": {
+        "home": 3.39,
+        "draw": 3.63,
+        "away": 4.27
+      },
+      "current": {
+        "home": 3.47,
+        "draw": 3.52,
+        "away": 4.29
+      },
+      "handle_usdt": 44012.63,
+      "bet_count": 590,
+      "handle_home_pct": 0.547,
+      "handle_away_pct": 0.453
+    },
+    {
+      "match_id": "M0007",
+      "sport": "篮球",
+      "league": "NBA",
+      "home": "Lakers",
+      "away": "Celtics",
+      "start_time": "2026-06-12 12:30",
+      "opening": {
+        "home": 2.27,
+        "draw": null,
+        "away": 3.99
+      },
+      "current": {
+        "home": 2.32,
+        "draw": null,
+        "away": 4.11
+      },
+      "handle_usdt": 26328.45,
+      "bet_count": 2117,
+      "handle_home_pct": 0.43,
+      "handle_away_pct": 0.57
+    },
+    {
+      "match_id": "M0008",
+      "sport": "篮球",
+      "league": "NBA",
+      "home": "Warriors",
+      "away": "Nuggets",
+      "start_time": "2026-06-12 12:00",
+      "opening": {
+        "home": 1.88,
+        "draw": null,
+        "away": 3.21
+      },
+      "current": {
+        "home": 1.9,
+        "draw": null,
+        "away": 3.29
+      },
+      "handle_usdt": 31638.25,
+      "bet_count": 479,
+      "handle_home_pct": 0.434,
+      "handle_away_pct": 0.566
+    },
+    {
+      "match_id": "M0009",
+      "sport": "篮球",
+      "league": "NBA",
+      "home": "Bucks",
+      "away": "Heat",
+      "start_time": "2026-06-12 12:30",
+      "opening": {
+        "home": 2.74,
+        "draw": null,
+        "away": 3.56
+      },
+      "current": {
+        "home": 2.69,
+        "draw": null,
+        "away": 3.5
+      },
+      "handle_usdt": 39495.44,
+      "bet_count": 2071,
+      "handle_home_pct": 0.418,
+      "handle_away_pct": 0.582
+    },
+    {
+      "match_id": "M0010",
+      "sport": "篮球",
+      "league": "欧篮",
+      "home": "Real Madrid",
+      "away": "Barcelona",
+      "start_time": "2026-06-12 18:30",
+      "opening": {
+        "home": 3.13,
+        "draw": null,
+        "away": 3.56
+      },
+      "current": {
+        "home": 3.17,
+        "draw": null,
+        "away": 3.57
+      },
+      "handle_usdt": 15683.84,
+      "bet_count": 2103,
+      "handle_home_pct": 0.521,
+      "handle_away_pct": 0.479
+    },
+    {
+      "match_id": "M0011",
+      "sport": "网球",
+      "league": "ATP",
+      "home": "Alcaraz",
+      "away": "Sinner",
+      "start_time": "2026-06-12 19:15",
+      "opening": {
+        "home": 2.04,
+        "draw": null,
+        "away": 2.37
+      },
+      "current": {
+        "home": 2.13,
+        "draw": null,
+        "away": 2.28
+      },
+      "handle_usdt": 15090.6,
+      "bet_count": 947,
+      "handle_home_pct": 0.38,
+      "handle_away_pct": 0.62
+    },
+    {
+      "match_id": "M0012",
+      "sport": "网球",
+      "league": "ATP",
+      "home": "Djokovic",
+      "away": "Zverev",
+      "start_time": "2026-06-12 21:15",
+      "opening": {
+        "home": 2.77,
+        "draw": null,
+        "away": 1.79
+      },
+      "current": {
+        "home": 2.68,
+        "draw": null,
+        "away": 1.75
+      },
+      "handle_usdt": 53217.91,
+      "bet_count": 564,
+      "handle_home_pct": 0.558,
+      "handle_away_pct": 0.442
+    },
+    {
+      "match_id": "M0013",
+      "sport": "电竞",
+      "league": "LOL-LPL",
+      "home": "JDG",
+      "away": "BLG",
+      "start_time": "2026-06-12 21:15",
+      "opening": {
+        "home": 2.59,
+        "draw": null,
+        "away": 2.72
+      },
+      "current": {
+        "home": 2.65,
+        "draw": null,
+        "away": 2.69
+      },
+      "handle_usdt": 68133.78,
+      "bet_count": 275,
+      "handle_home_pct": 0.405,
+      "handle_away_pct": 0.595
+    },
+    {
+      "match_id": "M0014",
+      "sport": "电竞",
+      "league": "LOL-LPL",
+      "home": "TES",
+      "away": "WBG",
+      "start_time": "2026-06-12 16:45",
+      "opening": {
+        "home": 2.96,
+        "draw": null,
+        "away": 3.9
+      },
+      "current": {
+        "home": 2.87,
+        "draw": null,
+        "away": 3.74
+      },
+      "handle_usdt": 58356.58,
+      "bet_count": 1219,
+      "handle_home_pct": 0.384,
+      "handle_away_pct": 0.616
+    },
+    {
+      "match_id": "M0015",
+      "sport": "电竞",
+      "league": "CS2",
+      "home": "NAVI",
+      "away": "Vitality",
+      "start_time": "2026-06-12 20:00",
+      "opening": {
+        "home": 2.55,
+        "draw": null,
+        "away": 1.84
+      },
+      "current": {
+        "home": 2.6,
+        "draw": null,
+        "away": 1.76
+      },
+      "handle_usdt": 47096.72,
+      "bet_count": 1551,
+      "handle_home_pct": 0.44,
+      "handle_away_pct": 0.56
+    },
+    {
+      "match_id": "M0016",
+      "sport": "电竞",
+      "league": "Dota2",
+      "home": "Spirit",
+      "away": "Falcons",
+      "start_time": "2026-06-12 21:15",
+      "opening": {
+        "home": 2.54,
+        "draw": null,
+        "away": 3.53
+      },
+      "current": {
+        "home": 2.86,
+        "draw": null,
+        "away": 3.32
+      },
+      "handle_usdt": 83681.13,
+      "bet_count": 1439,
+      "handle_home_pct": 0.831,
+      "handle_away_pct": 0.169
+    },
+    {
+      "match_id": "M0017",
+      "sport": "足球",
+      "league": "英冠",
+      "home": "Leeds",
+      "away": "Norwich",
+      "start_time": "2026-06-12 17:30",
+      "opening": {
+        "home": 1.57,
+        "draw": 2.82,
+        "away": 2.6
+      },
+      "current": {
+        "home": 1.54,
+        "draw": 2.83,
+        "away": 2.65
+      },
+      "handle_usdt": 73089.94,
+      "bet_count": 1268,
+      "handle_home_pct": 0.628,
+      "handle_away_pct": 0.372
+    },
+    {
+      "match_id": "M0018",
+      "sport": "篮球",
+      "league": "CBA",
+      "home": "Liaoning",
+      "away": "Zhejiang",
+      "start_time": "2026-06-12 12:00",
+      "opening": {
+        "home": 2.65,
+        "draw": null,
+        "away": 3.82
+      },
+      "current": {
+        "home": 2.69,
+        "draw": null,
+        "away": 3.85
+      },
+      "handle_usdt": 79221.33,
+      "bet_count": 207,
+      "handle_home_pct": 0.608,
+      "handle_away_pct": 0.392
+    },
+    {
+      "match_id": "M0019",
+      "sport": "网球",
+      "league": "WTA",
+      "home": "Swiatek",
+      "away": "Sabalenka",
+      "start_time": "2026-06-12 21:45",
+      "opening": {
+        "home": 2.34,
+        "draw": null,
+        "away": 3.96
+      },
+      "current": {
+        "home": 2.41,
+        "draw": null,
+        "away": 3.88
+      },
+      "handle_usdt": 75792.79,
+      "bet_count": 1285,
+      "handle_home_pct": 0.525,
+      "handle_away_pct": 0.475
+    },
+    {
+      "match_id": "M0020",
+      "sport": "电竞",
+      "league": "Valorant",
+      "home": "EDG",
+      "away": "T1",
+      "start_time": "2026-06-12 21:15",
+      "opening": {
+        "home": 1.93,
+        "draw": null,
+        "away": 3.25
+      },
+      "current": {
+        "home": 2.22,
+        "draw": null,
+        "away": 3.0
+      },
+      "handle_usdt": 175417.44,
+      "bet_count": 275,
+      "handle_home_pct": 0.767,
+      "handle_away_pct": 0.233
+    }
+  ]
+}

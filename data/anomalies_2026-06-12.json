@@ -1,0 +1,80 @@
+{
+  "date": "2026-06-12",
+  "thresholds": {
+    "steam_drop_pct": 0.15,
+    "reverse_line_gap": 0.1,
+    "handle_concentration": 0.8,
+    "big_handle_usdt": 120000,
+    "low_count_high_handle": 200
+  },
+  "anomalies": [
+    {
+      "match_id": "M0020",
+      "sport": "电竞",
+      "league": "Valorant",
+      "match": "EDG vs T1",
+      "start_time": "2026-06-12 21:15",
+      "handle_usdt": 175417.44,
+      "top_severity": "high",
+      "flags": [
+        {
+          "rule": "R2_反向线动",
+          "severity": "high",
+          "side": "主胜",
+          "value": 15.0,
+          "reason": "77% 投注额压主队,主队赔率反升 15.0%,疑 sharp money 在另一边"
+        },
+        {
+          "rule": "R4_大额盘口",
+          "severity": "mid",
+          "side": "-",
+          "value": 175417.0,
+          "reason": "单场投注额 175,417 USDT,超大额关注线"
+        }
+      ]
+    },
+    {
+      "match_id": "M0005",
+      "sport": "足球",
+      "league": "德甲",
+      "match": "Bayern vs Dortmund",
+      "start_time": "2026-06-12 21:00",
+      "handle_usdt": 89550.67,
+      "top_severity": "high",
+      "flags": [
+        {
+          "rule": "R2_反向线动",
+          "severity": "high",
+          "side": "主胜",
+          "value": 13.5,
+          "reason": "76% 投注额压主队,主队赔率反升 13.5%,疑 sharp money 在另一边"
+        }
+      ]
+    },
+    {
+      "match_id": "M0016",
+      "sport": "电竞",
+      "league": "Dota2",
+      "match": "Spirit vs Falcons",
+      "start_time": "2026-06-12 21:15",
+      "handle_usdt": 83681.13,
+      "top_severity": "high",
+      "flags": [
+        {
+          "rule": "R2_反向线动",
+          "severity": "high",
+          "side": "主胜",
+          "value": 12.6,
+          "reason": "83% 投注额压主队,主队赔率反升 12.6%,疑 sharp money 在另一边"
+        },
+        {
+          "rule": "R3_投注集中",
+          "severity": "mid",
+          "side": "主胜",
+          "value": 83.1,
+          "reason": "单边投注占比 83%,盘口风险敞口集中"
+        }
+      ]
+    }
+  ]
+}

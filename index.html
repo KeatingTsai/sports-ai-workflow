@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 工作流落地 Demo — 体育数据日报 + 赔率异动监控</title>
+<style>
+  :root{
+    --bg:#0f1115; --panel:#171a21; --panel2:#1e222b; --line:#2a2f3a;
+    --ink:#e8eaed; --mut:#9aa3b2; --acc:#4c8dff; --good:#37b97f;
+    --warn:#e0a43b; --bad:#e0584b; --chip:#232834;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,"Segoe UI",Roboto,"Microsoft JhengHei","PingFang TC",sans-serif;
+    line-height:1.6;font-size:15px}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 22px 80px}
+  header{padding:54px 0 30px;border-bottom:1px solid var(--line)}
+  .kick{color:var(--acc);font-weight:600;letter-spacing:.12em;font-size:12px;text-transform:uppercase}
+  h1{font-size:30px;margin:12px 0 8px;line-height:1.25}
+  .sub{color:var(--mut);font-size:16px;max-width:760px}
+  .role{display:flex;flex-wrap:wrap;gap:8px;margin-top:18px}
+  .role span{background:var(--chip);border:1px solid var(--line);border-radius:999px;
+    padding:5px 12px;font-size:12.5px;color:var(--mut)}
+  section{margin-top:40px}
+  h2{font-size:21px;margin:0 0 6px;display:flex;align-items:center;gap:10px}
+  h2 .n{display:inline-flex;width:26px;height:26px;border-radius:7px;background:var(--acc);
+    color:#fff;font-size:13px;align-items:center;justify-content:center;font-weight:700}
+  .lead{color:var(--mut);margin:0 0 18px;max-width:820px}
+  .grid{display:grid;gap:14px}
+  .g2{grid-template-columns:1fr 1fr}
+  .g3{grid-template-columns:repeat(3,1fr)}
+  @media(max-width:720px){.g2,.g3{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px 20px}
+  .card h3{margin:0 0 8px;font-size:15px}
+  .card p{margin:0;color:var(--mut);font-size:13.5px}
+  .stat{font-size:30px;font-weight:700;letter-spacing:-.01em}
+  .stat.good{color:var(--good)} .stat.bad{color:var(--bad)} .stat.acc{color:var(--acc)}
+  .stat small{font-size:13px;color:var(--mut);font-weight:400;margin-left:4px}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:6px}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line);vertical-align:top}
+  th{color:var(--mut);font-weight:600;font-size:12.5px}
+  tbody tr:hover{background:var(--panel2)}
+  .flow{display:flex;flex-wrap:wrap;gap:10px;align-items:stretch}
+  .step{flex:1;min-width:150px;background:var(--panel);border:1px solid var(--line);
+    border-radius:11px;padding:14px;position:relative}
+  .step .s{font-size:11px;color:var(--acc);font-weight:700;letter-spacing:.08em}
+  .step h4{margin:6px 0 5px;font-size:14px}
+  .step p{margin:0;color:var(--mut);font-size:12px}
+  .step .file{margin-top:8px;font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:11px;color:#7fa9ef;background:#11161f;border:1px solid var(--line);
+    border-radius:6px;padding:3px 7px;display:inline-block}
+  .arrow{align-self:center;color:var(--mut);font-size:18px}
+  @media(max-width:720px){.arrow{transform:rotate(90deg)}}
+  .sev-high{color:var(--bad);font-weight:700}
+  .sev-mid{color:var(--warn);font-weight:700}
+  code,.mono{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.5px}
+  .report{background:#0c0f14;border:1px solid var(--line);border-radius:12px;
+    padding:6px 22px;max-height:520px;overflow:auto}
+  .report h1{font-size:19px;border:0;padding:18px 0 2px}
+  .report h2{font-size:15.5px;color:var(--ink);margin-top:18px}
+  .report h3{font-size:14px;color:var(--ink);margin:14px 0 4px}
+  .report ul{margin:6px 0;padding-left:20px}
+  .report li{color:var(--mut);font-size:13px}
+  .report table{margin:8px 0}
+  .report blockquote{color:var(--mut);border-left:3px solid var(--line);
+    margin:14px 0 4px;padding:2px 0 2px 14px;font-size:12.5px}
+  .tag{display:inline-block;background:#11161f;border:1px solid var(--line);
+    border-radius:6px;padding:2px 8px;font-size:11.5px;color:var(--mut);margin:2px 4px 2px 0}
+  .note{color:var(--mut);font-size:12.5px;margin-top:8px}
+  .pill{display:inline-block;padding:2px 9px;border-radius:999px;font-size:11.5px;font-weight:600}
+  .pill.r{background:rgba(224,88,75,.14);color:#ff8d82}
+  .pill.g{background:rgba(55,185,127,.14);color:#5fd6a3}
+  footer{margin-top:54px;padding-top:22px;border-top:1px solid var(--line);
+    color:var(--mut);font-size:12.5px}
+  a{color:#7fa9ef}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <div class="kick">AI 业务流程优化负责人 · 落地 Demo</div>
+  <h1>体育数据日报 + 赔率异动监控:一条端到端 AI 工作流</h1>
+  <p class="sub">把体育运营团队「每天早上人工拼日报」这件重复工作,拆成 SOP、用规则引擎 + Claude 自动化、再封成可复用模板库。一条工作流,覆盖取数、异动监控、风控预警、日报撰写、自动推送。</p>
+  <div class="role">
+    <span>对口 JD:体育数据</span><span>数据分析</span><span>业务安全</span>
+    <span>文档/报表生成</span><span>n8n 自动化</span><span>SOP + 模板库</span><span>AI 应用落地报告</span>
+  </div>
+</header>
+
+<section>
+  <h2><span class="n">1</span>这条工作流解决什么</h2>
+  <p class="lead">体育盘口每天开上百场,运营每早要登多个后台导数据、肉眼扫赔率找异动、挑可疑盘口、写结论、贴群。流程长、靠经验、夜班易漏、口径因人而异。把它做成工作流后,人只做最后一步「复核高优先盘口」。</p>
+  <div class="grid g3">
+    <div class="card"><div class="stat bad">~75<small>分钟/天</small></div><p>改造前:1 人手工拼日报的耗时(导数+找异动+写+推)</p></div>
+    <div class="card"><div class="stat good">~4<small>分钟/天</small></div><p>改造后:只复核规则引擎挑出的高优先盘口</p></div>
+    <div class="card"><div class="stat acc">~27.5<small>小时/月</small></div><p>单人单流程节省工时,且夜班/周末不漏报、口径不漂</p></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">2</span>工作流架构:规则在前,AI 在后</h2>
+  <p class="lead">能量化的违规(赔率急跌、反向线动、投注集中)用规则引擎抓,稳定、可解释、零成本;规则抓不到的语义叙述才交给 LLM。AI 不负责「判定有没有异常」,只负责把规则命中的 flag 翻成运营听得懂的话——判定权留在规则与风控,这是工作流可信、可交接的关键。</p>
+  <div class="flow">
+    <div class="step"><div class="s">S1 取数</div><h4>拉赔率 + 投注分布</h4><p>API/后台快照,统一结构。换真数据只改这一步</p><span class="file">fetch_odds.py</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step"><div class="s">S2 检测</div><h4>异动规则引擎</h4><p>5 条规则命中 + 按严重度排序,阈值可热改</p><span class="file">detect_anomaly.py</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step"><div class="s">S3 撰写</div><h4>Claude 生成日报</h4><p>按固定口径模板写,缺 key 走离线兜底</p><span class="file">prompt_日报生成.md</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step"><div class="s">S4 推送</div><h4>飞书 / Slack</h4><p>Webhook 自动推,失败重试 + 本地存档</p><span class="file">n8n Webhook</span></div>
+    <div class="arrow">&rarr;</div>
+    <div class="step"><div class="s">S5 复核</div><h4>人工只看高优先</h4><p>确认 / 转风控,30 分钟未处置二次提醒</p><span class="file">人</span></div>
+  </div>
+  <p class="note">同一条流程有两种载体:<code>run_pipeline.py</code>(代码版,clone 即跑)与 <code>workflows/n8n_体育日报_workflow.json</code>(可 import 进 n8n 的可视化调度版,Cron → HTTP → Code → Claude → 飞书)。</p>
+</section>
+
+<section>
+  <h2><span class="n">3</span>异动规则引擎(运营可自助调阈值)</h2>
+  <p class="lead">阈值集中在 <code>detect_anomaly.py</code> 顶部 <code>THRESHOLDS</code>,运营改敏感度不用动代码逻辑。R2/R5 直接对接业务安全。</p>
+  <table>
+    <thead><tr><th>规则</th><th>含义</th><th>默认阈值</th><th>严重度</th><th>对接</th></tr></thead>
+    <tbody>
+      <tr><td>R1 赔率急跌</td><td>某边较开盘跌幅(资金急涌 steam move)</td><td>&gt;15%</td><td><span class="sev-high">高</span></td><td>盘口风控</td></tr>
+      <tr><td>R2 反向线动</td><td>钱压一边但该边赔率反升(疑 sharp money)</td><td>投注≥65% 且赔率升≥10%</td><td><span class="sev-high">高</span></td><td>业务安全</td></tr>
+      <tr><td>R3 投注集中</td><td>单边投注占比过高,敞口集中</td><td>&gt;80%</td><td><span class="sev-mid">中</span></td><td>交易</td></tr>
+      <tr><td>R4 大额盘口</td><td>单场投注额超关注线</td><td>&gt;12 万 USDT</td><td><span class="sev-mid">中</span></td><td>交易</td></tr>
+      <tr><td>R5 少笔大额</td><td>大额但笔数极少(疑大户/对打)</td><td>额≥6 万且 &lt;200 笔</td><td><span class="sev-high">高</span></td><td>业务安全</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2><span class="n">4</span>实跑产出(2026-06-11,真数据非截图)</h2>
+  <p class="lead">下面是 <code>run_pipeline.py</code> 实际跑出来的日报。当天 20 场赛事、113 万 USDT 投注额,规则引擎命中 <span class="pill r">4 个高优先异动盘口</span>,已按严重度排好序。配置 <code>ANTHROPIC_API_KEY</code> 后这段会换成 Claude 撰写的自然语言叙述版,结构口径不变。</p>
+  <div class="report">
+    <h1>体育数据运营日报 — 2026-06-11</h1>
+    <h2>一、今日大盘摘要</h2>
+    <ul>
+      <li>覆盖赛事 20 场,总投注额 1,135,864 USDT,总投注 23,892 笔。</li>
+      <li>投注额最高品类:篮球,贡献 371,779 USDT。</li>
+      <li>异动盘口 4 个,其中高优先 4 个,已按严重度排序待核。</li>
+    </ul>
+    <h2>二、分品类表现</h2>
+    <table>
+      <thead><tr><th>品类</th><th>赛事数</th><th>投注额 USDT</th><th>投注笔数</th></tr></thead>
+      <tbody>
+        <tr><td>篮球</td><td>5</td><td>371,779</td><td>8,111</td></tr>
+        <tr><td>足球</td><td>7</td><td>328,741</td><td>6,449</td></tr>
+        <tr><td>电竞</td><td>5</td><td>247,635</td><td>5,783</td></tr>
+        <tr><td>网球</td><td>3</td><td>187,710</td><td>3,549</td></tr>
+      </tbody>
+    </table>
+    <h2>三、赔率异动 / 可疑盘口预警</h2>
+    <h3>[高] 篮球 CBA — Liaoning vs Zhejiang</h3>
+    <ul>
+      <li>开赛 2026-06-11 12:15 · 投注额 202,111 USDT</li>
+      <li>R1 赔率急跌(高):主胜赔率较开盘下跌 20.0%,资金短时急涌,留意内幕/操盘</li>
+      <li>R3 投注集中(中):单边投注占比 82%,盘口风险敞口集中</li>
+      <li>R4 大额盘口(中):单场投注额 202,111 USDT,超大额关注线</li>
+    </ul>
+    <h3>[高] 足球 意甲 — Inter vs Napoli</h3>
+    <ul>
+      <li>开赛 2026-06-11 15:15 · 投注额 86,014 USDT</li>
+      <li>R1 赔率急跌(高):主胜赔率较开盘下跌 32.3%,资金短时急涌,留意内幕/操盘</li>
+      <li>R3 投注集中(中):单边投注占比 83%,盘口风险敞口集中</li>
+      <li>R5 少笔大额(高):投注额 86,014 USDT 仅 193 笔,人均极高,疑大户或对打,转风控核查</li>
+    </ul>
+    <h3>[高] 电竞 Valorant — EDG vs T1</h3>
+    <ul>
+      <li>开赛 2026-06-11 20:00 · 投注额 61,208 USDT</li>
+      <li>R1 赔率急跌(高):主胜赔率较开盘下跌 30.4%,资金短时急涌,留意内幕/操盘</li>
+    </ul>
+    <h3>[高] 电竞 Dota2 — Spirit vs Falcons</h3>
+    <ul>
+      <li>开赛 2026-06-11 20:00 · 投注额 56,136 USDT</li>
+      <li>R1 赔率急跌(高):主胜赔率较开盘下跌 30.6%,资金短时急涌,留意内幕/操盘</li>
+      <li>R3 投注集中(中):单边投注占比 80%,盘口风险敞口集中</li>
+    </ul>
+    <h2>四、风控关注与建议</h2>
+    <ul>
+      <li>4 个高优先盘口建议即时复核:Liaoning vs Zhejiang、Inter vs Napoli、EDG vs T1、Spirit vs Falcons。</li>
+      <li>含 R2 反向线动 / R5 少笔大额者,转风控核查关联账号与资金来源。</li>
+    </ul>
+    <blockquote>本报告由 AI 工作流自动生成(离线模板模式)。配置 ANTHROPIC_API_KEY 后切换为 Claude 撰写的自然语言叙述版。</blockquote>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">5</span>交付的可复用资产</h2>
+  <p class="lead">这不是一次性脚本,是一套可交接、可复用的资产。改口径只动模板、改敏感度只动阈值、接真数据只换取数函数,下游零改动。</p>
+  <div class="grid g2">
+    <div class="card"><h3>SOP_体育数据日报.md</h3><p>触发条件、5 步流程表、质量判准、交接与培训要点。新人照着就能接手。</p></div>
+    <div class="card"><h3>prompt_日报生成.md / prompt_异动解读.md</h3><p>提示词模板库,口径写死在模板(无 emoji / 异动用疑似措辞 / 转风控)。运营改口径不碰代码。</p></div>
+    <div class="card"><h3>n8n_体育日报_workflow.json</h3><p>可直接 import 进 n8n 的可视化调度工作流:Cron → HTTP → Code → Claude → 飞书。</p></div>
+    <div class="card"><h3>fetch / detect / report / run_pipeline.py</h3><p>四支纯标准库脚本,零第三方依赖、clone 即跑、缺 API key 自动走离线兜底。</p></div>
+  </div>
+</section>
+
+<section>
+  <h2><span class="n">6</span>同一套骨架,怎么搬到别的部门</h2>
+  <p class="lead">这条工作流是模板:换 S1 取数源 + S2 规则 + S3 提示词,骨架(取数→规则兜底→LLM 补语义→推送→人工复核)直接复用。下面是可立刻照搬的三个场景,正好覆盖 JD 点名的其他模块。</p>
+  <table>
+    <thead><tr><th>新场景</th><th>S1 取数换成</th><th>S2 规则换成</th><th>S3 提示词换成</th><th>对应 JD</th></tr></thead>
+    <tbody>
+      <tr><td>用户工单分类 + 草拟回复</td><td>客服系统工单</td><td>关键词/正则分类打标签</td><td>分类摘要 + 草拟回复</td><td>用户支持 / 智能客服</td></tr>
+      <tr><td>运营周报自动生成</td><td>各业务后台周数据</td><td>环比/同比异常阈值</td><td>先总后分周报口径</td><td>日报周报模板</td></tr>
+      <tr><td>异常行为/风控告警</td><td>用户行为日志</td><td>多账号/IP/资金规则</td><td>风险研判 + 处置建议</td><td>业务安全 / 异常行为</td></tr>
+    </tbody>
+  </table>
+  <p class="note">每接一个新场景,就是 JD 要求的「每周至少落地 1 个可复用 AI 工作流」。第一条做完,后面是复制骨架 + 换三块。</p>
+</section>
+
+<footer>
+  <p><strong>怎么重跑</strong>(Windows + PowerShell + Python 3.13,零第三方依赖):<br>
+  <code>cd scripts; python -X utf8 run_pipeline.py --date 2026-06-11</code><br>
+  产出落在 <code>data/</code>(快照 / 异动 / 日报)。配置环境变量 <code>ANTHROPIC_API_KEY</code> 后,日报自动从离线模板切换为 Claude(claude-sonnet-4-6)撰写版,口径与结构不变。</p>
+  <p>口径与设计取舍:数字皆由脚本可重跑复现;异动只做「疑似 / 建议核查」措辞,定性权留风控;报表以 RTP / 投注额绝对值为主,不与 GGR 同图。详见 <a href="README.md">README.md</a> 与 <a href="templates/SOP_体育数据日报.md">SOP</a>。</p>
+</footer>
+
+</div>
+</body>
+</html>
